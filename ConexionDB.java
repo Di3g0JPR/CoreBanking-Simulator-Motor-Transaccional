@@ -4,18 +4,18 @@ import java.sql.SQLException;
 
 public class ConexionDB {
     
-    // Ruta hacia tu contenedor Docker
+    
     private static final String URL = "jdbc:mysql://localhost:3306/portfolio_db";
     private static final String USUARIO = "root";
-    private static final String CLAVE = "admin"; // La clave que configuramos en Docker
+    private static final String CLAVE = "admin"; 
 
     public static Connection conectar() {
         Connection conexion = null;
         try {
-            // Le pedimos a Java que use el traductor (Driver) que acabas de instalar
+            
             Class.forName("com.mysql.cj.jdbc.Driver");
             
-            // Intentamos cruzar el puente hacia la base de datos
+            
             conexion = DriverManager.getConnection(URL, USUARIO, CLAVE);
             System.out.println("✅ ¡Exito absoluto! Java y MySQL en Docker estan conectados.");
             
