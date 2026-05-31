@@ -51,7 +51,9 @@ public class LogicaBancaria{
         }
 
         saldos [idCliente] = saldos[idCliente] - monto;
-
         sc.close();
+
+        System.out.println("Procesando guardado seguro en el servidor...");
+        AuditoriaDB.registrarOperacion("Cliente"+ idCliente, monto, "Transaccion Emitida");
     }
 }
