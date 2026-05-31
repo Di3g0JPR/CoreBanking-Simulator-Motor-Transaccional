@@ -1,22 +1,26 @@
-##  Descripción del Proyecto
-Sistema backend desarrollado en Java que simula el procesamiento por lotes (batch processing) de un motor bancario tradicional. El proyecto está enfocado en la validación de reglas de negocio financieras, conciliación de saldos y aplicación de protocolos de seguridad transaccional sobre estructuras de datos multidimensionales.
+#  CoreBanking Simulator: Motor Transaccional con Persistencia JDBC
 
-El objetivo principal de esta herramienta es garantizar la integridad de las cuentas de los clientes, previniendo sobregiros (saldos negativos) y alertando sobre comportamientos anómalos.
+##  Descripción del Proyecto
+Sistema backend desarrollado en Java que simula el procesamiento y validación de transacciones bancarias. El proyecto evolucionó de una validación lógica en memoria a una **Arquitectura de 3 Capas**, integrando persistencia de datos en una base de datos relacional MySQL contenerizada en Docker.
+
+El objetivo es garantizar la integridad de las cuentas, previniendo sobregiros y registrando cada movimiento aprobado de forma inmutable y segura en el servidor.
 
 ##  Funcionalidades Principales
-* **Auditoría Antifraude (Security Alert):** Implementación de un algoritmo de búsqueda lineal sobre la matriz de transacciones para aislar y detectar el movimiento de egreso más extremo (mínimo absoluto), emitiendo una alerta preventiva de bloqueo de cuenta.
-* **Conciliación de Saldos y Overdraft Protection:** Motor de procesamiento que cruza los saldos base (Array 1D) con los movimientos semanales (Array 2D). Incorpora compuertas lógicas condicionales (`if/else`) que rechazan y revierten automáticamente cualquier transacción que vulnere el límite de saldo cero.
-* **Módulo de Transferencias Seguras:** Interfaz transaccional protegida por validación estricta de estado (`while` loop). El sistema evalúa dos vectores de riesgo en simultáneo: prohíbe la transferencia de montos negativos/nulos y valida la liquidez suficiente en la cuenta de origen antes de ejecutar el débito.
+* **Capa de Lógica (Core Banking):** Motor de procesamiento con compuertas condicionales que evalúan liquidez y previenen saldos negativos en transferencias.
+* **Auditoría Antifraude:** Algoritmo lineal sobre matrices para aislamiento y detección preventiva de egresos anómalos.
+* **Persistencia Segura (Database):** Conexión automatizada mediante JDBC a MySQL. 
+* **Prevención de Inyecciones SQL:** Implementación de `PreparedStatement` en las sentencias `INSERT` para sanitizar las entradas y proteger la base de datos contra ataques transaccionales.
 
-##  Tecnologías y Conceptos Aplicados
-* **Lenguaje:** Java
-* **Estructuras de Datos:** Vectores Paralelos y Matrices (Arrays 1D y 2D).
-* **Lógica Algorítmica:** Reducción de datos, contadores condicionales y búsqueda de valores críticos.
-* **Seguridad (Defensive Programming):** Control de flujo estricto para mitigar errores de usuario y asegurar la consistencia financiera.
+##  Stack Tecnológico
+* **Lenguaje:** Java (Lógica de negocio y control de flujo).
+* **Bases de Datos:** MySQL (Ejecutado en entorno aislado con Docker).
+* **Conectividad:** JDBC (Java Database Connectivity).
+* **Estructuras:** Matrices bidimensionales y vectores para evaluación de saldos en caliente.
 
-##  Cómo ejecutar el proyecto
-1. Clonar el repositorio en el entorno local.
-2. Compilar los archivos ejecutando el comando:
-   `javac MainBanco.java LogicaBancaria.java`
-3. Ejecutar el motor de procesamiento nocturno:
-   `java MainBanco`# CoreBanking-Simulator-Motor-Transaccional
+##  Entorno de Ejecución
+1. Levantar el contenedor de la base de datos:
+   `docker run --name portfolio-mysql -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=portfolio_db -p 3306:3306 -d mysql:8.0`
+2. Compilar el código integrando el driver JDBC:
+   `javac -cp ".;lib/*" *.java`
+3. Ejecutar el motor principal:
+   `java -cp ".;lib/*" MainBanco`
